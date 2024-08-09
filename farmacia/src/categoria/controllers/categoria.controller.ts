@@ -1,4 +1,4 @@
-﻿import {
+﻿﻿import {
   Body,
   Controller,
   Delete,
@@ -12,7 +12,9 @@
 } from '@nestjs/common';
 import { Categoria } from '../entities/categoria.entity';
 import { CategoriaService } from '../services/categoria.services';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Categoria')
 @Controller('/categorias')
 export class CategoriaController {
   constructor(private readonly categoriaService: CategoriaService) {}
