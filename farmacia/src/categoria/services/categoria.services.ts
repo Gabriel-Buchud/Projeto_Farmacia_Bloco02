@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+﻿import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, ILike, Repository } from 'typeorm';
 import { Categoria } from '../entities/categoria.entity';
@@ -11,11 +11,7 @@ export class CategoriaService {
   ) {}
 
   async findAll(): Promise<Categoria[]> {
-    return await this.categoriaRepository.find({
-      relations: {
-        // produto: true,
-      },
-    });
+    return await this.categoriaRepository.find();
   }
 
   async findById(id: number): Promise<Categoria> {
@@ -23,15 +19,14 @@ export class CategoriaService {
       where: {
         id,
       },
-      relations: {
-        // produto: true,
-      },
     });
-    if (!Categoria)
+
+    if (!categoria)
       throw new HttpException(
-        'Categoria não foi encontrada!',
+        'Categoria não encontrada!',
         HttpStatus.NOT_FOUND,
       );
+
     return categoria;
   }
 
@@ -39,9 +34,6 @@ export class CategoriaService {
     return await this.categoriaRepository.find({
       where: {
         tipo: ILike(`%${tipo}%`),
-      },
-      relations: {
-        // produto: true,
       },
     });
   }
@@ -51,22 +43,26 @@ export class CategoriaService {
   }
 
   async update(categoria: Categoria): Promise<Categoria> {
-    let buscaCategoria = await this.findById(categoria.id);
+    let buscaCategoria: Categoria = await this.findById(categoria.id);
+
     if (!buscaCategoria || !categoria.id)
       throw new HttpException(
-        'A Categoria não foi encontrada!',
+        'Categoria não foi encontrada!',
         HttpStatus.NOT_FOUND,
       );
+
     return await this.categoriaRepository.save(categoria);
   }
 
   async delete(id: number): Promise<DeleteResult> {
-    let buscaCategoria = await this.findById(id);
+    let buscaCategoria: Categoria = await this.findById(id);
+
     if (!buscaCategoria)
       throw new HttpException(
-        'Categoria não encontrado!',
+        'Categoria não foi encontrada!',
         HttpStatus.NOT_FOUND,
       );
+
     return await this.categoriaRepository.delete(id);
   }
 }
